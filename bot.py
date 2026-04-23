@@ -3,14 +3,13 @@ import telebot
 from flask import Flask, request
 import google.generativeai as genai
 
-# משיכת מפתחות הגישה
 TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN')
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
 WEBHOOK_URL = os.environ.get('WEBHOOK_URL')
-ALLOWED_USER_ID = os.environ.get('ALLOWED_USER_ID') # <-- התוספת החדשה שלנו
+ALLOWED_USER_ID = os.environ.get('ALLOWED_USER_ID')
 
-# אתחול
-bot = telebot.TeleBot(TELEGRAM_TOKEN)
+# התיקון הקריטי: threaded=False אומר לבוט לטפל בהודעה מיד ולא ברקע
+bot = telebot.TeleBot(TELEGRAM_TOKEN, threaded=False)
 app = Flask(__name__)
 genai.configure(api_key=GEMINI_API_KEY)
 
@@ -42,8 +41,10 @@ def webhook():
 
 @bot.message_handler(func=lambda message: True)
 def handle_message(message):
-    # מנגנון הנעילה: בודק אם ה-ID של השולח תואם לשלך
-    if str(message.chat.id) != ALLOWED_USER_ID:
+    print(f"Received message from ID: {message.chat.id}")
+    
+    # שיפרנו את ההגנה כדי שרווחים בטעות לא יהרסו את הזיהוי
+    if str(message.chat.id) != str(ALLOWED_USER_ID).strip():
         bot.reply_to(message, "סליחה, הבוט הזה הוא סוכן אישי ואינו פתוח לציבור. ⛔")
         return
 
@@ -52,7 +53,9 @@ def handle_message(message):
     try:
         response = model.generate_content(message.text)
         bot.reply_to(message, response.text)
+        print("Successfully replied!")
     except Exception as e:
+        print(f"Error with AI: {e}")
         bot.reply_to(message, "משהו השתבש בחיבור למוח שלי... אפשר לנסות שוב?")
 
 if __name__ == "__main__":
