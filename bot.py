@@ -24,7 +24,7 @@ system_instruction = """
 דבר בעברית, קצר, ענייני ובגובה העיניים.
 """
 
-model = genai.GenerativeModel('gemini-1.5-flash', system_instruction=system_instruction)
+model = genai.GenerativeModel('gemini-2.5-flash', system_instruction=system_instruction)
 
 @app.route('/' + TELEGRAM_TOKEN, methods=['POST'])
 def getMessage():
