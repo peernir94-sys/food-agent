@@ -1,4 +1,4 @@
 pyTelegramBotAPI
 Flask
 google-generativeai
-gunicorn
+Pillow
