@@ -99,7 +99,7 @@ DATA: calories=X, protein=X, carbs=X, fat=X
 5. אל תציב מעצמך יעדים קלוריים (כמו 2200 קלוריות) אלא אם המשתמש ביקש זאת במפורש.
 """
 
-model = genai.GenerativeModel('models/gemini-1.5-flash', system_instruction=system_instruction)
+model = genai.GenerativeModel('models/gemini-2.5-flash', system_instruction=system_instruction)
 
 # יצירת המקלדת עם שני קיצורי הדרך
 def get_main_keyboard():
