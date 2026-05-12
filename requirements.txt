@@ -2,3 +2,4 @@ pyTelegramBotAPI
 Flask
 google-generativeai
 Pillow
+gunicorn
